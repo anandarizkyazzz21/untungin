@@ -181,10 +181,6 @@ class UntunginApp(App):
         cards.add_widget(self.card_net)
         cards.add_widget(self.card_state)
 
-        self.q_modal_input = TextInput(multiline=False, background_normal='', background_color=self._hex_to_rgba(WHITE), foreground_color=self._hex_to_rgba('#212121'), padding=[12, 12, 12, 12])
-        self.q_jual_input = TextInput(multiline=False, background_normal='', background_color=self._hex_to_rgba(WHITE), foreground_color=self._hex_to_rgba('#212121'), padding=[12, 12, 12, 12])
-        self.q_qty_input = TextInput(multiline=False, background_normal='', background_color=self._hex_to_rgba(WHITE), foreground_color=self._hex_to_rgba('#212121'), padding=[12, 12, 12, 12])
-
         bottom = BoxLayout(orientation='horizontal', spacing=16)
 
         left_panel = BGBox(orientation='vertical', padding=18, spacing=12, bg_color=self._hex_to_rgba(WHITE))
@@ -209,9 +205,12 @@ class UntunginApp(App):
 
         right_panel = BGBox(orientation='vertical', padding=24, spacing=14, bg_color=self._hex_to_rgba(ACTIVE_GREEN))
         right_panel.add_widget(Label(text='Quick Calculate', size_hint_y=None, height=34, bold=True, color=self._hex_to_rgba(WHITE)))
-        right_panel.add_widget(self._make_input_block('Harga Modal', self.q_modal_input))
-        right_panel.add_widget(self._make_input_block('Harga Jual', self.q_jual_input))
-        right_panel.add_widget(self._make_input_block('Jumlah Unit', self.q_qty_input))
+        block, self.q_modal_input = self._make_input_block('Harga Modal')
+        right_panel.add_widget(block)
+        block, self.q_jual_input = self._make_input_block('Harga Jual')
+        right_panel.add_widget(block)
+        block, self.q_qty_input = self._make_input_block('Jumlah Unit')
+        right_panel.add_widget(block)
 
         calc_btn = Button(text='Calculate', size_hint_y=None, height=48, background_normal='', background_color=self._hex_to_rgba(WHITE), color=self._hex_to_rgba(PRIMARY_GREEN), bold=True)
         calc_btn.bind(on_release=lambda inst: self._on_quick_calc())
@@ -344,11 +343,12 @@ class UntunginApp(App):
         badge.add_widget(label)
         return badge
 
-    def _make_input_block(self, label_text, input_widget):
+    def _make_input_block(self, label_text):
+        input_widget = TextInput(multiline=False, background_normal='', background_color=self._hex_to_rgba(WHITE), foreground_color=self._hex_to_rgba('#212121'), padding=[12, 12, 12, 12])
         block = BoxLayout(orientation='vertical', size_hint_y=None, height=90)
         block.add_widget(Label(text=label_text, size_hint_y=None, height=18, color=self._hex_to_rgba(WHITE)))
         block.add_widget(input_widget)
-        return block
+        return block, input_widget
 
     def _make_form_input(self, label_text):
         field = BoxLayout(orientation='vertical', size_hint_y=None, height=88)
