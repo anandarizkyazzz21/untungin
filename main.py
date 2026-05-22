@@ -1,4 +1,5 @@
 import os
+from kivy.core.window import Window
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.metrics import dp
@@ -30,6 +31,8 @@ class LaporanScreen(Screen):
 
 class UntunginApp(App):
     kv_file = ''
+    # Simulate a typical Android phone portrait size when running on PC
+    Window.size = (360, 640)
     primary_color = ListProperty([0.11, 0.34, 0.16, 1])
     accent_color = ListProperty([0.18, 0.49, 0.16, 1])
     background_color = ListProperty([0.96, 0.95, 0.92, 1])
