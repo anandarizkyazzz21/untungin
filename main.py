@@ -29,6 +29,7 @@ class LaporanScreen(Screen):
 
 
 class UntunginApp(App):
+    kv_file = ''
     sidebar_bg = ListProperty([217 / 255, 230 / 255, 209 / 255, 1])
     nav_color = ListProperty([0.11, 0.34, 0.16, 1])
     active_nav_color = ListProperty([0.18, 0.49, 0.16, 1])
@@ -46,6 +47,9 @@ class UntunginApp(App):
         self.root = Builder.load_file(os.path.join(os.path.dirname(__file__), 'untungin.kv'))
         self.switch_screen('dashboard')
         return self.root
+
+    def get_screen_ids(self, screen_name):
+        return self.root.ids.screen_manager.get_screen(screen_name).ids
 
     def switch_screen(self, screen_name):
         self.root.ids.screen_manager.current = screen_name
@@ -72,18 +76,19 @@ class UntunginApp(App):
         omzet = sum(tx['total_jual'] for tx in transactions)
         pengeluaran = sum(tx['total_modal'] for tx in transactions)
         net_profit = sum(tx['untung_rugi'] for tx in transactions)
+        dashboard_ids = self.get_screen_ids('dashboard')
 
-        self.root.ids.omzet_value.text = f'Rp {omzet:,.2f}'
-        self.root.ids.pengeluaran_value.text = f'Rp {pengeluaran:,.2f}'
-        self.root.ids.net_value.text = f'Rp {net_profit:,.2f}'
-        self.root.ids.quick_value.text = f'{len(transactions)} transaksi'
-        self.root.ids.quick_state_label.text = 'Tekan Untung / Rugi untuk melihat ringkasan cepat'
+        dashboard_ids.omzet_value.text = f'Rp {omzet:,.2f}'
+        dashboard_ids.pengeluaran_value.text = f'Rp {pengeluaran:,.2f}'
+        dashboard_ids.net_value.text = f'Rp {net_profit:,.2f}'
+        dashboard_ids.quick_value.text = f'{len(transactions)} transaksi'
+        dashboard_ids.quick_state_label.text = 'Tekan Untung / Rugi untuk melihat ringkasan cepat'
 
         self.refresh_dashboard_table(transactions)
         self.refresh_recent_activity(transactions)
 
     def refresh_dashboard_table(self, transactions):
-        body = self.root.ids.dashboard_table
+        body = self.get_screen_ids('dashboard').dashboard_table
         body.clear_widgets()
         if not transactions:
             body.add_widget(Label(text='Tidak ada transaksi', color=(0.4, 0.4, 0.4, 1), halign='center', valign='middle', size_hint_y=None, height=dp(40), text_size=(self.root.width, None)))
@@ -101,7 +106,7 @@ class UntunginApp(App):
             body.add_widget(row)
 
     def refresh_recent_activity(self, transactions):
-        container = self.root.ids.activity_container
+        container = self.get_screen_ids('dashboard').activity_container
         container.clear_widgets()
         latest = transactions[-5:][::-1]
         if not latest:
@@ -112,7 +117,7 @@ class UntunginApp(App):
             container.add_widget(row)
 
     def refresh_history(self):
-        container = self.root.ids.history_grid
+        container = self.get_screen_ids('riwayat').history_grid
         container.clear_widgets()
         transactions = self.data_manager.load_transactions()
         if not transactions:
@@ -130,7 +135,7 @@ class UntunginApp(App):
             container.add_widget(row)
 
     def refresh_report(self):
-        container = self.root.ids.report_grid
+        container = self.get_screen_ids('laporan').report_grid
         container.clear_widgets()
         summary = self.build_daily_summary()
         if not summary:
@@ -165,11 +170,12 @@ class UntunginApp(App):
         transactions = self.data_manager.load_transactions()
         filtered = [tx for tx in transactions if tx['status'] == status]
         total = sum(tx['untung_rugi'] for tx in filtered)
-        self.root.ids.quick_value.text = f'{len(filtered)} transaksi'
-        self.root.ids.quick_state_label.text = f'Total {status.lower()}: Rp {total:,.2f}'
+        dashboard_ids = self.get_screen_ids('dashboard')
+        dashboard_ids.quick_value.text = f'{len(filtered)} transaksi'
+        dashboard_ids.quick_state_label.text = f'Total {status.lower()}: Rp {total:,.2f}'
 
     def on_calculate(self):
-        ids = self.root.ids
+        ids = self.get_screen_ids('hitung_baru')
         try:
             result = self.controller.hitung(
                 ids.product_input.text,
@@ -192,7 +198,7 @@ class UntunginApp(App):
             ids.feedback_label.text = 'Periksa kembali input angka.'
 
     def on_save_transaction(self):
-        ids = self.root.ids
+        ids = self.get_screen_ids('hitung_baru')
         if not self.current_result:
             return
         self.data_manager.save_transaction(self.current_result)
