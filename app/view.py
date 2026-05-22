@@ -238,12 +238,12 @@ class UntunginApp(App):
 
         form_panel = BGBox(orientation='vertical', size_hint_x=0.52, padding=24, spacing=16, bg_color=self._hex_to_rgba(WHITE))
         form_panel.add_widget(Label(text='Hitung Baru', size_hint_y=None, height=34, bold=True, color=self._hex_to_rgba('#212121')))
-        self.i_nama = self._make_form_input('Nama Produk')
-        self.i_kategori = self._make_form_input('Kategori')
-        self.i_modal = self._make_form_input('Harga Modal')
-        self.i_jual = self._make_form_input('Harga Jual')
-        self.i_qty = self._make_form_input('Jumlah Unit')
-        for field in [self.i_nama, self.i_kategori, self.i_modal, self.i_jual, self.i_qty]:
+        nama_field, self.i_nama = self._make_form_input('Nama Produk')
+        kategori_field, self.i_kategori = self._make_form_input('Kategori')
+        modal_field, self.i_modal = self._make_form_input('Harga Modal')
+        jual_field, self.i_jual = self._make_form_input('Harga Jual')
+        qty_field, self.i_qty = self._make_form_input('Jumlah Unit')
+        for field in [nama_field, kategori_field, modal_field, jual_field, qty_field]:
             form_panel.add_widget(field)
 
         submit_btn = Button(text='HITUNG SEKARANG', size_hint_y=None, height=48, background_normal='', background_color=self._hex_to_rgba(ACTIVE_GREEN), color=self._hex_to_rgba(WHITE), bold=True)
@@ -355,7 +355,7 @@ class UntunginApp(App):
         field.add_widget(Label(text=label_text, size_hint_y=None, height=18, color=self._hex_to_rgba('#424242')))
         input_widget = TextInput(multiline=False, background_normal='', background_color=self._hex_to_rgba(WHITE), foreground_color=self._hex_to_rgba('#212121'), padding=[12, 12, 12, 12])
         field.add_widget(input_widget)
-        return input_widget
+        return field, input_widget
 
     def _update_shape(self, shape, widget):
         shape.rectangle = (widget.x, widget.y, widget.width, widget.height)
