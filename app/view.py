@@ -3,7 +3,7 @@ kivy.require('2.0.0')
 
 from kivy.app import App
 from kivy.core.window import Window
-from kivy.graphics import Color, Ellipse, Rectangle
+from kivy.graphics import Color, Ellipse, Line, Rectangle
 from kivy.properties import ObjectProperty, ListProperty
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
@@ -17,7 +17,6 @@ from kivy.uix.widget import Widget
 
 from app.controller import KalkulatorDagang
 from app.model import DataManager
-
 
 PRIMARY_GREEN = '#1B5E20'
 ACTIVE_GREEN = '#2E7D32'
@@ -45,7 +44,7 @@ class BGBox(BoxLayout):
         self._rect.size = self.size
 
 
-class Sidebar(Button):
+class SidebarButton(Button):
     pass
 
 
@@ -79,16 +78,17 @@ class UntunginApp(App):
 
         root = BoxLayout(orientation='horizontal')
 
-        self.sidebar = BoxLayout(orientation='vertical', size_hint_x=None, width=200, padding=16, spacing=18)
+        self.sidebar = BoxLayout(orientation='vertical', size_hint_x=None, width=200, spacing=14, padding=(16, 24, 16, 24))
         with self.sidebar.canvas.before:
             Color(*self._hex_to_rgba(PRIMARY_GREEN))
             self._sidebar_rect = Rectangle(pos=self.sidebar.pos, size=self.sidebar.size)
         self.sidebar.bind(pos=self._update_sidebar_rect, size=self._update_sidebar_rect)
 
         self.sidebar.add_widget(Label(text='UNTUNGIN', size_hint_y=None, height=44, bold=True, color=self._hex_to_rgba(WHITE), font_size='20sp'))
+
         self.nav_buttons = {}
         for label, screen in [('Dashboard', 'dashboard'), ('Hitung Baru', 'hitung_baru'), ('Riwayat', 'riwayat'), ('Laporan', 'laporan')]:
-            btn = Button(text=label, size_hint_y=None, height=44, background_normal='', background_color=self._hex_to_rgba(PRIMARY_GREEN), color=self._hex_to_rgba(WHITE), bold=True)
+            btn = SidebarButton(text=label, size_hint_y=None, height=44, background_normal='', background_color=self._hex_to_rgba(PRIMARY_GREEN), color=self._hex_to_rgba(WHITE), bold=True)
             btn.bind(on_release=lambda inst, s=screen: self.switch_screen(s))
             self.nav_buttons[screen] = btn
             self.sidebar.add_widget(btn)
@@ -110,7 +110,6 @@ class UntunginApp(App):
         self.sm.add_widget(self.hitung_baru)
         self.sm.add_widget(self.riwayat)
         self.sm.add_widget(self.laporan)
-
         root.add_widget(self.sm)
 
         self._build_dashboard()
@@ -142,22 +141,21 @@ class UntunginApp(App):
             self._refresh_laporan()
 
     def _build_dashboard(self):
-        dashboard_layout = BoxLayout(orientation='vertical', spacing=20, padding=20)
+        layout = BoxLayout(orientation='vertical', spacing=20, padding=20)
 
-        banner = BGBox(orientation='vertical', size_hint_y=None, height=300, padding=30, spacing=16, bg_color=self._hex_to_rgba(PRIMARY_GREEN))
+        banner = BGBox(orientation='vertical', size_hint_y=None, height=300, padding=28, spacing=14, bg_color=self._hex_to_rgba(PRIMARY_GREEN))
         with banner.canvas.before:
             Color(*self._hex_to_rgba(PRIMARY_GREEN))
-            self._banner_bg = Rectangle(pos=banner.pos, size=banner.size)
+            self._banner_rect = Rectangle(pos=banner.pos, size=banner.size)
             Color(*self._hex_to_rgba(YELLOW))
-            self._banner_circle = Ellipse(size=(320, 320), pos=(banner.x + banner.width - 250, banner.y + banner.height - 190))
+            self._banner_circle = Ellipse(size=(320, 320), pos=(banner.x + banner.width - 220, banner.y + banner.height - 190))
         banner.bind(pos=self._update_banner_graphics, size=self._update_banner_graphics)
 
-        banner_content = AnchorLayout(anchor_x='center', anchor_y='center')
-        identity_box = BoxLayout(orientation='vertical', size_hint=(None, None), width=560, spacing=12)
-
-        title = Label(text='UNTUNGIN', font_size='58sp', bold=True, color=self._hex_to_rgba(WHITE), halign='center', valign='middle')
+        content = AnchorLayout(anchor_x='center', anchor_y='center')
+        identity = BoxLayout(orientation='vertical', size_hint=(None, None), width=560, spacing=12)
+        title = Label(text='UNTUNGIN', font_size='60sp', bold=True, color=self._hex_to_rgba(WHITE), halign='center', valign='middle')
         title.bind(size=title.setter('text_size'))
-        divider = BGBox(size_hint=(None, None), size=(140, 4), bg_color=self._hex_to_rgba(BADGE_ORANGE))
+        divider = BGBox(size_hint=(None, None), size=(160, 4), bg_color=self._hex_to_rgba(BADGE_ORANGE))
         subtitle = Label(text='Aplikasi Perhitungan Untung & Rugi Pedagang', font_size='18sp', color=self._hex_to_rgba(WHITE), halign='center', valign='middle')
         subtitle.bind(size=subtitle.setter('text_size'))
         badge = BGBox(size_hint=(None, None), size=(190, 42), padding=10, bg_color=self._hex_to_rgba(ACTIVE_GREEN))
@@ -165,34 +163,39 @@ class UntunginApp(App):
         badge_label.bind(size=badge_label.setter('text_size'))
         badge.add_widget(badge_label)
 
-        identity_box.add_widget(title)
-        identity_box.add_widget(divider)
-        identity_box.add_widget(subtitle)
-        identity_box.add_widget(badge)
-        banner_content.add_widget(identity_box)
-        banner.add_widget(banner_content)
+        identity.add_widget(title)
+        identity.add_widget(divider)
+        identity.add_widget(subtitle)
+        identity.add_widget(badge)
+        content.add_widget(identity)
+        banner.add_widget(content)
 
         self.card_omzet = self._make_dashboard_card('Total Omzet (Revenue)', 'Rp 0', self._hex_to_rgba(PRIMARY_GREEN))
-        self.card_pengeluaran = self._make_dashboard_card('Total Pengeluaran (Expenses)', 'Rp 0', self._hex_to_rgba('#8B4513'))
+        self.card_pengeluaran = self._make_dashboard_card('Total Pengeluaran (Expenses)', 'Rp 0', self._hex_to_rgba(DANGER))
         self.card_net = self._make_dashboard_card('Net Profit (Clean Profit)', 'Rp 0', self._hex_to_rgba(SUCCESS))
         self.card_state = self._make_dashboard_card('Untung/Rugi State', '', self._hex_to_rgba('#212121'), state_badges=True)
 
-        cards_row = BoxLayout(orientation='horizontal', size_hint_y=None, height=160, spacing=16)
-        cards_row.add_widget(self.card_omzet)
-        cards_row.add_widget(self.card_pengeluaran)
-        cards_row.add_widget(self.card_net)
-        cards_row.add_widget(self.card_state)
+        cards = GridLayout(cols=4, size_hint_y=None, height=170, spacing=16)
+        cards.add_widget(self.card_omzet)
+        cards.add_widget(self.card_pengeluaran)
+        cards.add_widget(self.card_net)
+        cards.add_widget(self.card_state)
 
-        bottom_area = BoxLayout(orientation='horizontal', spacing=16)
-        left_panel = BGBox(orientation='vertical', size_hint_x=0.62, padding=18, spacing=14, bg_color=self._hex_to_rgba(WHITE))
-        left_panel.add_widget(Label(text='Tabel Ringkasan Transaksi', size_hint_y=None, height=34, bold=True, color=self._hex_to_rgba('#212121')))
+        self.q_modal_input = TextInput(multiline=False, background_normal='', background_color=self._hex_to_rgba(WHITE), foreground_color=self._hex_to_rgba('#212121'), padding=[12, 12, 12, 12])
+        self.q_jual_input = TextInput(multiline=False, background_normal='', background_color=self._hex_to_rgba(WHITE), foreground_color=self._hex_to_rgba('#212121'), padding=[12, 12, 12, 12])
+        self.q_qty_input = TextInput(multiline=False, background_normal='', background_color=self._hex_to_rgba(WHITE), foreground_color=self._hex_to_rgba('#212121'), padding=[12, 12, 12, 12])
 
-        table_header = GridLayout(cols=5, size_hint_y=None, height=32, spacing=6)
-        for heading in ['Produk', 'Modal', 'Jual', 'Qty', 'Untung/Rugi']:
-            header_label = Label(text=f'[b]{heading}[/b]', markup=True, color=self._hex_to_rgba('#212121'), halign='center', valign='middle')
-            header_label.bind(size=header_label.setter('text_size'))
-            table_header.add_widget(header_label)
-        left_panel.add_widget(table_header)
+        bottom = BoxLayout(orientation='horizontal', spacing=16)
+
+        left_panel = BGBox(orientation='vertical', padding=18, spacing=12, bg_color=self._hex_to_rgba(WHITE))
+        left_panel.add_widget(Label(text='Tabel Ringkasan Transaksi', size_hint_y=None, height=32, bold=True, color=self._hex_to_rgba('#212121')))
+
+        header = GridLayout(cols=5, size_hint_y=None, height=34, spacing=6)
+        for label in ['Produk', 'Modal', 'Jual', 'Qty', 'Untung/Rugi']:
+            lbl = Label(text=f'[b]{label}[/b]', markup=True, color=self._hex_to_rgba('#212121'), halign='center', valign='middle')
+            lbl.bind(size=lbl.setter('text_size'))
+            header.add_widget(lbl)
+        left_panel.add_widget(header)
 
         self.dashboard_table_scroll = ScrollView()
         self.dashboard_table = GridLayout(cols=5, size_hint_y=None, spacing=8)
@@ -204,36 +207,31 @@ class UntunginApp(App):
         view_details.bind(on_release=lambda inst: self.switch_screen('riwayat'))
         left_panel.add_widget(view_details)
 
-        right_panel = BGBox(orientation='vertical', size_hint_x=0.38, padding=24, spacing=16, bg_color=self._hex_to_rgba(ACTIVE_GREEN))
+        right_panel = BGBox(orientation='vertical', padding=24, spacing=14, bg_color=self._hex_to_rgba(ACTIVE_GREEN))
         right_panel.add_widget(Label(text='Quick Calculate', size_hint_y=None, height=34, bold=True, color=self._hex_to_rgba(WHITE)))
+        right_panel.add_widget(self._make_input_block('Harga Modal', self.q_modal_input))
+        right_panel.add_widget(self._make_input_block('Harga Jual', self.q_jual_input))
+        right_panel.add_widget(self._make_input_block('Jumlah Unit', self.q_qty_input))
 
-        self.q_modal = self._make_quick_input('Harga Modal')
-        self.q_jual = self._make_quick_input('Harga Jual')
-        self.q_qty = self._make_quick_input('Jumlah Unit')
+        calc_btn = Button(text='Calculate', size_hint_y=None, height=48, background_normal='', background_color=self._hex_to_rgba(WHITE), color=self._hex_to_rgba(PRIMARY_GREEN), bold=True)
+        calc_btn.bind(on_release=lambda inst: self._on_quick_calc())
+        right_panel.add_widget(calc_btn)
 
-        right_panel.add_widget(self.q_modal)
-        right_panel.add_widget(self.q_jual)
-        right_panel.add_widget(self.q_qty)
+        self.q_result_status = Label(text='Status: -', size_hint_y=None, height=26, color=self._hex_to_rgba(WHITE), halign='left', valign='middle')
+        self.q_result_bayar = Label(text='Untung/Rugi: -', size_hint_y=None, height=26, color=self._hex_to_rgba(WHITE), halign='left', valign='middle')
+        self.q_result_margin = Label(text='Margin: -', size_hint_y=None, height=26, color=self._hex_to_rgba(WHITE), halign='left', valign='middle')
+        for lbl in [self.q_result_status, self.q_result_bayar, self.q_result_margin]:
+            lbl.bind(size=lbl.setter('text_size'))
+            right_panel.add_widget(lbl)
 
-        calc_button = Button(text='Calculate', size_hint_y=None, height=46, background_normal='', background_color=self._hex_to_rgba(WHITE), color=self._hex_to_rgba(PRIMARY_GREEN), bold=True)
-        calc_button.bind(on_release=lambda inst: self._on_quick_calc())
-        right_panel.add_widget(calc_button)
+        bottom.add_widget(left_panel)
+        bottom.add_widget(right_panel)
 
-        self.q_result_status = Label(text='Status: -', size_hint_y=None, height=28, color=self._hex_to_rgba(WHITE), halign='left', valign='middle')
-        self.q_result_bayar = Label(text='Untung/Rugi: -', size_hint_y=None, height=28, color=self._hex_to_rgba(WHITE), halign='left', valign='middle')
-        self.q_result_margin = Label(text='Margin: -', size_hint_y=None, height=28, color=self._hex_to_rgba(WHITE), halign='left', valign='middle')
-        for label in [self.q_result_status, self.q_result_bayar, self.q_result_margin]:
-            label.bind(size=label.setter('text_size'))
-            right_panel.add_widget(label)
+        layout.add_widget(banner)
+        layout.add_widget(cards)
+        layout.add_widget(bottom)
+        self.dashboard.add_widget(layout)
 
-        bottom_area.add_widget(left_panel)
-        bottom_area.add_widget(right_panel)
-
-        dashboard_layout.add_widget(banner)
-        dashboard_layout.add_widget(cards_row)
-        dashboard_layout.add_widget(bottom_area)
-
-        self.dashboard.add_widget(dashboard_layout)
         self._refresh_dashboard()
 
     def _build_hitung_baru(self):
@@ -241,21 +239,19 @@ class UntunginApp(App):
 
         form_panel = BGBox(orientation='vertical', size_hint_x=0.52, padding=24, spacing=16, bg_color=self._hex_to_rgba(WHITE))
         form_panel.add_widget(Label(text='Hitung Baru', size_hint_y=None, height=34, bold=True, color=self._hex_to_rgba('#212121')))
-
         self.i_nama = self._make_form_input('Nama Produk')
         self.i_kategori = self._make_form_input('Kategori')
         self.i_modal = self._make_form_input('Harga Modal')
         self.i_jual = self._make_form_input('Harga Jual')
         self.i_qty = self._make_form_input('Jumlah Unit')
-
-        for input_widget in [self.i_nama, self.i_kategori, self.i_modal, self.i_jual, self.i_qty]:
-            form_panel.add_widget(input_widget)
+        for field in [self.i_nama, self.i_kategori, self.i_modal, self.i_jual, self.i_qty]:
+            form_panel.add_widget(field)
 
         submit_btn = Button(text='HITUNG SEKARANG', size_hint_y=None, height=48, background_normal='', background_color=self._hex_to_rgba(ACTIVE_GREEN), color=self._hex_to_rgba(WHITE), bold=True)
         submit_btn.bind(on_release=lambda inst: self._on_hitung())
         form_panel.add_widget(submit_btn)
 
-        result_panel = BGBox(orientation='vertical', size_hint_x=0.48, padding=24, spacing=16, bg_color=self._hex_to_rgba(WHITE))
+        result_panel = BGBox(orientation='vertical', size_hint_x=0.48, padding=24, spacing=14, bg_color=self._hex_to_rgba(WHITE))
         result_panel.add_widget(Label(text='Hasil Perhitungan', size_hint_y=None, height=34, bold=True, color=self._hex_to_rgba('#212121')))
         self.r_status = Label(text='Status: -', size_hint_y=None, height=28, color=self._hex_to_rgba('#212121'))
         self.r_total_modal = Label(text='Total Modal: Rp 0', size_hint_y=None, height=28, color=self._hex_to_rgba('#212121'))
@@ -277,16 +273,16 @@ class UntunginApp(App):
         layout = BGBox(orientation='vertical', padding=20, spacing=16, bg_color=self._hex_to_rgba(LIGHT_GREY))
         layout.add_widget(Label(text='Riwayat Transaksi', size_hint_y=None, height=38, bold=True, color=self._hex_to_rgba('#212121')))
 
-        actions = BoxLayout(size_hint_y=None, height=48, spacing=12)
-        exp = Button(text='Ekspor CSV', background_normal='', background_color=self._hex_to_rgba('#1976D2'), color=self._hex_to_rgba(WHITE), bold=True)
-        exp.bind(on_release=lambda inst: self.model.export_to_csv('data/transaksi_export.csv'))
-        clr = Button(text='Hapus Semua', background_normal='', background_color=self._hex_to_rgba(DANGER), color=self._hex_to_rgba(WHITE), bold=True)
-        clr.bind(on_release=lambda inst: (self.model.clear_all_transactions(), self._refresh_riwayat()))
-        actions.add_widget(exp)
-        actions.add_widget(clr)
-        layout.add_widget(actions)
+        action_row = BoxLayout(size_hint_y=None, height=48, spacing=12)
+        export_btn = Button(text='Ekspor CSV', background_normal='', background_color=self._hex_to_rgba('#1976D2'), color=self._hex_to_rgba(WHITE), bold=True)
+        export_btn.bind(on_release=lambda inst: self.model.export_to_csv('data/transaksi_export.csv'))
+        clear_btn = Button(text='Hapus Semua', background_normal='', background_color=self._hex_to_rgba(DANGER), color=self._hex_to_rgba(WHITE), bold=True)
+        clear_btn.bind(on_release=lambda inst: (self.model.clear_all_transactions(), self._refresh_riwayat()))
+        action_row.add_widget(export_btn)
+        action_row.add_widget(clear_btn)
+        layout.add_widget(action_row)
 
-        header = GridLayout(cols=6, size_hint_y=None, height=32, spacing=6)
+        header = GridLayout(cols=6, size_hint_y=None, height=34, spacing=6)
         for title in ['Produk', 'Modal', 'Jual', 'Qty', 'Untung/Rugi', 'Status']:
             label = Label(text=f'[b]{title}[/b]', markup=True, color=self._hex_to_rgba('#212121'), halign='center', valign='middle')
             label.bind(size=label.setter('text_size'))
@@ -306,7 +302,7 @@ class UntunginApp(App):
         layout = BGBox(orientation='vertical', padding=20, spacing=16, bg_color=self._hex_to_rgba(LIGHT_GREY))
         layout.add_widget(Label(text='Laporan Harian', size_hint_y=None, height=38, bold=True, color=self._hex_to_rgba('#212121')))
 
-        self.report_header = GridLayout(cols=5, size_hint_y=None, height=32, spacing=6)
+        self.report_header = GridLayout(cols=5, size_hint_y=None, height=34, spacing=6)
         for title in ['Tanggal', 'Total Transaksi', 'Total Untung', 'Total Rugi', 'Net Profit']:
             label = Label(text=f'[b]{title}[/b]', markup=True, color=self._hex_to_rgba('#212121'), halign='center', valign='middle')
             label.bind(size=label.setter('text_size'))
@@ -324,10 +320,10 @@ class UntunginApp(App):
 
     def _make_dashboard_card(self, title, value, value_color, state_badges=False):
         card = BGBox(orientation='vertical', padding=16, spacing=12, bg_color=self._hex_to_rgba(WHITE))
-        with card.canvas.before:
-            Color(*self._hex_to_rgba(WHITE))
-            rect = Rectangle(pos=card.pos, size=card.size)
-        card.bind(pos=lambda instance, *args: self._update_shape(rect, instance), size=lambda instance, *args: self._update_shape(rect, instance))
+        with card.canvas.after:
+            Color(*self._hex_to_rgba(CARD_BORDER))
+            card._border = Line(rectangle=(card.x, card.y, card.width, card.height), width=1)
+        card.bind(pos=lambda instance, *args: self._update_shape(instance._border, instance), size=lambda instance, *args: self._update_shape(instance._border, instance))
 
         card.add_widget(Label(text=title, size_hint_y=None, height=24, color=self._hex_to_rgba('#424242')))
         if state_badges:
@@ -342,34 +338,32 @@ class UntunginApp(App):
         return card
 
     def _make_badge(self, text, bg_color, text_color):
-        badge = BGBox(size_hint=(None, None), size=(92, 38), padding=8, bg_color=bg_color)
+        badge = BGBox(size_hint=(None, None), size=(100, 38), padding=8, bg_color=bg_color)
         label = Label(text=text, bold=True, color=text_color, halign='center', valign='middle')
         label.bind(size=label.setter('text_size'))
         badge.add_widget(label)
         return badge
 
-    def _make_quick_input(self, label_text):
-        container = BoxLayout(orientation='vertical', size_hint_y=None, height=90)
-        container.add_widget(Label(text=label_text, size_hint_y=None, height=18, color=self._hex_to_rgba(WHITE)))
-        input_field = TextInput(multiline=False, background_normal='', background_color=self._hex_to_rgba(WHITE), foreground_color=self._hex_to_rgba('#212121'), padding=[12, 12, 12, 12])
-        container.add_widget(input_field)
-        return container
+    def _make_input_block(self, label_text, input_widget):
+        block = BoxLayout(orientation='vertical', size_hint_y=None, height=90)
+        block.add_widget(Label(text=label_text, size_hint_y=None, height=18, color=self._hex_to_rgba(WHITE)))
+        block.add_widget(input_widget)
+        return block
 
     def _make_form_input(self, label_text):
-        wrapper = BoxLayout(orientation='vertical', size_hint_y=None, height=88)
-        wrapper.add_widget(Label(text=label_text, size_hint_y=None, height=18, color=self._hex_to_rgba('#424242')))
-        field = TextInput(multiline=False, background_normal='', background_color=self._hex_to_rgba(WHITE), foreground_color=self._hex_to_rgba('#212121'), padding=[12, 12, 12, 12])
-        wrapper.add_widget(field)
-        return field
+        field = BoxLayout(orientation='vertical', size_hint_y=None, height=88)
+        field.add_widget(Label(text=label_text, size_hint_y=None, height=18, color=self._hex_to_rgba('#424242')))
+        input_widget = TextInput(multiline=False, background_normal='', background_color=self._hex_to_rgba(WHITE), foreground_color=self._hex_to_rgba('#212121'), padding=[12, 12, 12, 12])
+        field.add_widget(input_widget)
+        return input_widget
 
     def _update_shape(self, shape, widget):
-        shape.pos = widget.pos
-        shape.size = widget.size
+        shape.rectangle = (widget.x, widget.y, widget.width, widget.height)
 
     def _update_banner_graphics(self, instance, *args):
-        self._banner_bg.pos = instance.pos
-        self._banner_bg.size = instance.size
-        self._banner_circle.pos = (instance.x + instance.width - 250, instance.y + instance.height - 190)
+        self._banner_rect.pos = instance.pos
+        self._banner_rect.size = instance.size
+        self._banner_circle.pos = (instance.x + instance.width - 220, instance.y + instance.height - 190)
 
     def _refresh_dashboard(self):
         omzet, modal, net, _ = self.calculate_overall_summary()
@@ -385,29 +379,27 @@ class UntunginApp(App):
             placeholder = Label(text='Tidak ada transaksi', color=self._hex_to_rgba('#757575'), halign='center', valign='middle')
             placeholder.bind(size=placeholder.setter('text_size'))
             self.dashboard_table.add_widget(placeholder)
-            self.dashboard_table.add_widget(Widget())
-            self.dashboard_table.add_widget(Widget())
-            self.dashboard_table.add_widget(Widget())
-            self.dashboard_table.add_widget(Widget())
+            for _ in range(4):
+                self.dashboard_table.add_widget(Widget())
             return
 
-        displayed = transactions[-5:]
-        for tx in displayed:
-            self.dashboard_table.add_widget(self._make_table_cell(str(tx.get('nama_produk', ''))))
-            self.dashboard_table.add_widget(self._make_table_cell(f"Rp {float(tx.get('harga_modal', 0)):,.2f}"))
-            self.dashboard_table.add_widget(self._make_table_cell(f"Rp {float(tx.get('harga_jual', 0)):,.2f}"))
-            self.dashboard_table.add_widget(self._make_table_cell(str(tx.get('jumlah', ''))))
-            self.dashboard_table.add_widget(self._make_table_cell(f"Rp {float(tx.get('untung_rugi', 0)):,.2f}"))
+        latest = transactions[-5:]
+        for tx in latest:
+            self.dashboard_table.add_widget(self._make_table_label(str(tx.get('nama_produk', ''))))
+            self.dashboard_table.add_widget(self._make_table_label(f"Rp {float(tx.get('harga_modal', 0)):,.2f}"))
+            self.dashboard_table.add_widget(self._make_table_label(f"Rp {float(tx.get('harga_jual', 0)):,.2f}"))
+            self.dashboard_table.add_widget(self._make_table_label(str(tx.get('jumlah', ''))))
+            self.dashboard_table.add_widget(self._make_table_label(f"Rp {float(tx.get('untung_rugi', 0)):,.2f}"))
 
-    def _make_table_cell(self, text):
+    def _make_table_label(self, text):
         label = Label(text=text, color=self._hex_to_rgba('#212121'), halign='center', valign='middle')
         label.bind(size=label.setter('text_size'))
         return label
 
     def _on_quick_calc(self):
-        modal = self.q_modal.children[0].text
-        jual = self.q_jual.children[0].text
-        qty = self.q_qty.children[0].text
+        modal = self.q_modal_input.text
+        jual = self.q_jual_input.text
+        qty = self.q_qty_input.text
         try:
             res = self.controller.hitung('', '', modal, jual, qty)
             self.q_result_status.text = f"Status: {res['status']}"
@@ -453,16 +445,20 @@ class UntunginApp(App):
                 self.history_grid.add_widget(Widget())
             return
         for tr in txs:
-            self.history_grid.add_widget(self._make_table_cell(str(tr.get('nama_produk', ''))))
-            self.history_grid.add_widget(self._make_table_cell(f"Rp {float(tr.get('harga_modal', 0)):,.2f}"))
-            self.history_grid.add_widget(self._make_table_cell(f"Rp {float(tr.get('harga_jual', 0)):,.2f}"))
-            self.history_grid.add_widget(self._make_table_cell(str(tr.get('jumlah', ''))))
-            self.history_grid.add_widget(self._make_table_cell(f"Rp {float(tr.get('untung_rugi', 0)):,.2f}"))
-            self.history_grid.add_widget(self._make_table_cell(self._status_from_tr(tr)))
+            self.history_grid.add_widget(self._make_table_label(str(tr.get('nama_produk', ''))))
+            self.history_grid.add_widget(self._make_table_label(f"Rp {float(tr.get('harga_modal', 0)):,.2f}"))
+            self.history_grid.add_widget(self._make_table_label(f"Rp {float(tr.get('harga_jual', 0)):,.2f}"))
+            self.history_grid.add_widget(self._make_table_label(str(tr.get('jumlah', ''))))
+            self.history_grid.add_widget(self._make_table_label(f"Rp {float(tr.get('untung_rugi', 0)):,.2f}"))
+            self.history_grid.add_widget(self._make_table_label(self._status_from_tr(tr)))
 
     def _refresh_laporan(self):
         self.report_grid.clear_widgets()
         summary = self.build_daily_summary()
+        if not summary:
+            for _ in range(5):
+                self.report_grid.add_widget(Widget())
+            return
         for date, data in summary:
             self.report_grid.add_widget(Label(text=str(date), color=self._hex_to_rgba('#212121')))
             self.report_grid.add_widget(Label(text=str(data['count']), color=self._hex_to_rgba('#212121')))
