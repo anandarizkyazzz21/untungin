@@ -213,8 +213,8 @@ class UntunginApp(App):
         card = BoxLayout(orientation='vertical', size_hint_y=None, height=dp(120), padding=dp(14), spacing=dp(8))
         with card.canvas.before:
             Color(rgba=self.card_color)
-            Rectangle(pos=card.pos, size=card.size)
-        card.bind(pos=lambda instance, *args: setattr(card.canvas.children[0], 'pos', card.pos), size=lambda instance, *args: setattr(card.canvas.children[0], 'size', card.size))
+            rect = Rectangle(pos=card.pos, size=card.size)
+        card.bind(pos=lambda instance, *args: setattr(rect, 'pos', card.pos), size=lambda instance, *args: setattr(rect, 'size', card.size))
 
         header = BoxLayout(orientation='horizontal', size_hint_y=None, height=dp(24))
         header.add_widget(self._create_label(transaction['nama_produk'], bold=True, size='16sp'))
@@ -232,15 +232,15 @@ class UntunginApp(App):
         card = BoxLayout(orientation='horizontal', size_hint_y=None, height=dp(72), padding=dp(12), spacing=dp(10))
         with card.canvas.before:
             Color(rgba=self.card_color)
-            Rectangle(pos=card.pos, size=card.size)
-        card.bind(pos=lambda instance, *args: setattr(card.canvas.children[0], 'pos', card.pos), size=lambda instance, *args: setattr(card.canvas.children[0], 'size', card.size))
+            rect = Rectangle(pos=card.pos, size=card.size)
+        card.bind(pos=lambda instance, *args: setattr(rect, 'pos', card.pos), size=lambda instance, *args: setattr(rect, 'size', card.size))
 
         side = BoxLayout(size_hint_x=None, width=dp(8))
         side.canvas.before.clear()
         with side.canvas.before:
             Color(rgba=self.accent_color)
-            Rectangle(pos=side.pos, size=side.size)
-        side.bind(pos=lambda instance, *args: setattr(side.canvas.children[0], 'pos', side.pos), size=lambda instance, *args: setattr(side.canvas.children[0], 'size', side.size))
+            rect_side = Rectangle(pos=side.pos, size=side.size)
+        side.bind(pos=lambda instance, *args: setattr(rect_side, 'pos', side.pos), size=lambda instance, *args: setattr(rect_side, 'size', side.size))
         card.add_widget(side)
 
         content = BoxLayout(orientation='vertical', spacing=dp(4))
@@ -257,8 +257,8 @@ class UntunginApp(App):
         card = BoxLayout(orientation='vertical', size_hint_y=None, height=dp(110), padding=dp(14), spacing=dp(8))
         with card.canvas.before:
             Color(rgba=self.card_color)
-            Rectangle(pos=card.pos, size=card.size)
-        card.bind(pos=lambda instance, *args: setattr(card.canvas.children[0], 'pos', card.pos), size=lambda instance, *args: setattr(card.canvas.children[0], 'size', card.size))
+            rect = Rectangle(pos=card.pos, size=card.size)
+        card.bind(pos=lambda instance, *args: setattr(rect, 'pos', card.pos), size=lambda instance, *args: setattr(rect, 'size', card.size))
 
         card.add_widget(self._create_label(date, bold=True, size='16sp'))
         card.add_widget(self._create_label(f"Transaksi: {values['count']}", color=self.muted_text, size='14sp'))
