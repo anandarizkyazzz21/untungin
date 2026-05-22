@@ -3,8 +3,9 @@ kivy.require('2.0.0')
 
 from kivy.app import App
 from kivy.core.window import Window
-from kivy.graphics import Color, Rectangle
+from kivy.graphics import Color, Rectangle, Ellipse
 from kivy.properties import StringProperty, ObjectProperty, NumericProperty, ListProperty
+from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
@@ -138,43 +139,65 @@ class UntunginApp(App):
             self._refresh_laporan()
 
     def _build_dashboard(self):
-        layout = BGBox(orientation='vertical', padding=16, spacing=12, bg_color=self._hex_to_rgba('#F7F7F7'))
-        header = Label(text='[b]Dashboard UNTUNGIN[/b]', size_hint_y=None, height=36, markup=True, color=self._hex_to_rgba('#212121'))
-        layout.add_widget(header)
+        # Background and accent circle for landing page styling
+        with self.dashboard.canvas.before:
+            Color(*self._hex_to_rgba(PRIMARY_GREEN))
+            self._dashboard_bg = Rectangle(pos=self.dashboard.pos, size=self.dashboard.size)
+            Color(*self._hex_to_rgba('#FFFF00'))
+            self._dashboard_accent = Ellipse(size=(420, 420), pos=(self.dashboard.width - 260, self.dashboard.height * 0.35))
+        self.dashboard.bind(pos=self._update_dashboard_background, size=self._update_dashboard_background)
 
-        # summary cards
-        cards = BoxLayout(size_hint_y=None, height=100, spacing=10)
+        # Main centered identity panel
+        body = AnchorLayout(anchor_x='center', anchor_y='center')
+        content = BoxLayout(orientation='vertical', size_hint=(0.85, 0.78), spacing=16)
+
+        brand_box = BoxLayout(orientation='vertical', size_hint_y=None, height=180, spacing=12)
+        logo_box = BGBox(size_hint=(None, None), size=(88, 88), padding=10, bg_color=self._hex_to_rgba(WHITE))
+        logo_label = Label(text='Rp', color=self._hex_to_rgba(PRIMARY_GREEN), bold=True, font_size='24sp', halign='center', valign='middle')
+        logo_label.bind(size=logo_label.setter('text_size'))
+        logo_box.add_widget(logo_label)
+        brand_box.add_widget(Widget(size_hint_y=None, height=12))
+        brand_box.add_widget(logo_box)
+        brand_name = Label(text='UNTUNGIN', size_hint_y=None, height=32, font_size='20sp', bold=True, color=self._hex_to_rgba(WHITE), halign='center', valign='middle')
+        brand_name.bind(size=brand_name.setter('text_size'))
+        brand_box.add_widget(brand_name)
+
+        title = Label(text='UNTUNGIN', markup=True, font_size='60sp', bold=True, color=self._hex_to_rgba(WHITE), size_hint_y=None, height=90, halign='center', valign='middle')
+        title.bind(size=title.setter('text_size'))
+        underline = BGBox(size_hint_y=None, height=4, bg_color=self._hex_to_rgba('#FFA600'))
+        subtitle = Label(text='Aplikasi Perhitungan Untung & Rugi Pedagang', font_size='18sp', color=self._hex_to_rgba(WHITE), halign='center', valign='middle')
+        description = Label(text='Analisis Sistem Menggunakan Metode Waterfall untuk memberikan wawasan untung-rugi yang cepat dan andal.', font_size='16sp', color=self._hex_to_rgba(WHITE), halign='center', valign='middle')
+        subtitle.bind(size=subtitle.setter('text_size'))
+        description.bind(size=description.setter('text_size'))
+
+        content.add_widget(brand_box)
+        content.add_widget(title)
+        content.add_widget(underline)
+        content.add_widget(subtitle)
+        content.add_widget(description)
+
+        # Statistics moved to the bottom of the dashboard
+        stats = BoxLayout(size_hint_y=None, height=100, spacing=10)
         self.card_omzet = self._make_card('Total Omzet', 'Rp 0')
         self.card_modal = self._make_card('Total Modal', 'Rp 0')
         self.card_net = self._make_card('Net Profit', 'Rp 0')
         self.card_count = self._make_card('Transaksi', '0')
-        cards.add_widget(self.card_omzet)
-        cards.add_widget(self.card_modal)
-        cards.add_widget(self.card_net)
-        cards.add_widget(self.card_count)
-        layout.add_widget(cards)
+        stats.add_widget(self.card_omzet)
+        stats.add_widget(self.card_modal)
+        stats.add_widget(self.card_net)
+        stats.add_widget(self.card_count)
 
-        # quick calculate (wrapped in soft-contrast container)
-        quick = BGBox(orientation='vertical', size_hint_y=None, height=220, padding=10, spacing=8, bg_color=self._hex_to_rgba('#EFEFEF'))
-        qlabel = Label(text='[b]Quick Calculate[/b]', size_hint_y=None, height=28, markup=True, color=self._hex_to_rgba('#212121'))
-        quick.add_widget(qlabel)
-        row = BoxLayout(size_hint_y=None, height=90, spacing=8)
-        self.q_modal = TextInput(hint_text='Modal', multiline=False)
-        self.q_jual = TextInput(hint_text='Jual', multiline=False)
-        self.q_qty = TextInput(hint_text='Qty', multiline=False)
-        for w in [self.q_modal, self.q_jual, self.q_qty]:
-            w.background_normal = ''
-            w.background_color = self._hex_to_rgba(WHITE)
-            row.add_widget(w)
-        quick.add_widget(row)
-        calc_btn = Button(text='Hitung Cepat', size_hint_y=None, height=40, background_color=self._hex_to_rgba(SUCCESS), color=self._hex_to_rgba(WHITE))
-        calc_btn.bind(on_release=lambda inst: self._on_quick_calc())
-        quick.add_widget(calc_btn)
-        self.q_result = Label(text='', halign='left', color=self._hex_to_rgba('#212121'))
-        quick.add_widget(self.q_result)
-        layout.add_widget(quick)
+        wrapper = BoxLayout(orientation='vertical', spacing=24)
+        wrapper.add_widget(body)
+        wrapper.add_widget(stats)
+        body.add_widget(content)
 
-        self.dashboard.add_widget(layout)
+        self.dashboard.add_widget(wrapper)
+
+    def _update_dashboard_background(self, *args):
+        self._dashboard_bg.pos = self.dashboard.pos
+        self._dashboard_bg.size = self.dashboard.size
+        self._dashboard_accent.pos = (self.dashboard.x + self.dashboard.width - 280, self.dashboard.y + self.dashboard.height * 0.35)
 
     def _build_hitung_baru(self):
         root = BGBox(orientation='horizontal', padding=16, spacing=12, bg_color=self._hex_to_rgba('#F7F7F7'))
