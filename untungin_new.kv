@@ -196,16 +196,6 @@
                             on_release: app.set_quick_status('RUGI')
 
                     Label:
-                        id: quick_value
-                        text: '0 transaksi'
-                        color: app.text_color
-                        bold: True
-                        font_size: '18sp'
-                        halign: 'left'
-                        valign: 'middle'
-                        text_size: self.size
-
-                    Label:
                         id: quick_state_label
                         text: 'Pilih status untuk ringkasan'
                         color: app.muted_text
@@ -213,24 +203,6 @@
                         halign: 'left'
                         valign: 'middle'
                         text_size: self.size
-
-                Label:
-                    text: 'Aktivitas Terbaru'
-                    color: app.text_color
-                    bold: True
-                    font_size: '16sp'
-                    halign: 'left'
-                    valign: 'middle'
-                    size_hint_y: None
-                    height: dp(28)
-                    text_size: self.size
-
-                GridLayout:
-                    id: activity_container
-                    cols: 1
-                    spacing: dp(10)
-                    size_hint_y: None
-                    height: self.minimum_height
 
                 Label:
                     text: 'Ringkasan Transaksi'
