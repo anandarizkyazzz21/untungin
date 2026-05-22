@@ -174,45 +174,55 @@
                         text_size: self.size
 
                     BoxLayout:
-                        orientation: 'horizontal'
-                        spacing: dp(10)
+                        orientation: 'vertical'
+                        spacing: dp(12)
                         size_hint_y: None
-                        height: dp(52)
+                        height: self.minimum_height
 
-                        Button:
-                            text: 'UNTUNG'
-                            background_normal: ''
-                            background_color: app.primary_color
-                            color: 1, 1, 1, 1
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            spacing: dp(10)
+                            size_hint_y: None
+                            height: dp(52)
+
+                            Button:
+                                text: 'UNTUNG'
+                                background_normal: ''
+                                background_color: app.primary_color
+                                color: 1, 1, 1, 1
+                                bold: True
+                                on_release: app.set_quick_status('UNTUNG')
+
+                            Button:
+                                text: 'RUGI'
+                                background_normal: ''
+                                background_color: app.danger_text
+                                color: 1, 1, 1, 1
+                                bold: True
+                                on_release: app.set_quick_status('RUGI')
+
+                        Label:
+                            id: quick_value
+                            text: '0 transaksi'
+                            color: app.text_color
                             bold: True
-                            on_release: app.set_quick_status('UNTUNG')
+                            font_size: '18sp'
+                            halign: 'left'
+                            valign: 'middle'
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            text_size: self.width, None
 
-                        Button:
-                            text: 'RUGI'
-                            background_normal: ''
-                            background_color: app.danger_text
-                            color: 1, 1, 1, 1
-                            bold: True
-                            on_release: app.set_quick_status('RUGI')
-
-                    Label:
-                        id: quick_value
-                        text: '0 transaksi'
-                        color: app.text_color
-                        bold: True
-                        font_size: '18sp'
-                        halign: 'left'
-                        valign: 'middle'
-                        text_size: self.size
-
-                    Label:
-                        id: quick_state_label
-                        text: 'Pilih status untuk ringkasan'
-                        color: app.muted_text
-                        font_size: '14sp'
-                        halign: 'left'
-                        valign: 'middle'
-                        text_size: self.size
+                        Label:
+                            id: quick_state_label
+                            text: 'Pilih status untuk ringkasan'
+                            color: app.muted_text
+                            font_size: '14sp'
+                            halign: 'left'
+                            valign: 'middle'
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            text_size: self.width, None
 
                 Label:
                     text: 'Aktivitas Terbaru'
@@ -406,51 +416,72 @@
                         valign: 'middle'
                         text_size: self.size
 
-                    Label:
-                        id: status_result
-                        text: 'Status: -'
-                        color: app.text_color
-                        font_size: '15sp'
-                        halign: 'left'
-                        valign: 'middle'
-                        text_size: self.size
+                    BoxLayout:
+                        orientation: 'vertical'
+                        spacing: dp(8)
+                        size_hint_y: None
+                        height: self.minimum_height
 
-                    Label:
-                        id: total_modal_result
-                        text: 'Total Modal: Rp 0'
-                        color: app.text_color
-                        font_size: '14sp'
-                        halign: 'left'
-                        valign: 'middle'
-                        text_size: self.size
+                        Label:
+                            id: status_result
+                            text: 'Status: -'
+                            color: app.text_color
+                            font_size: '15sp'
+                            halign: 'left'
+                            valign: 'middle'
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            text_size: self.width, None
+                            line_height: 1.2
 
-                    Label:
-                        id: total_jual_result
-                        text: 'Total Jual: Rp 0'
-                        color: app.text_color
-                        font_size: '14sp'
-                        halign: 'left'
-                        valign: 'middle'
-                        text_size: self.size
+                        Label:
+                            id: total_modal_result
+                            text: 'Total Modal: Rp 0'
+                            color: app.text_color
+                            font_size: '14sp'
+                            halign: 'left'
+                            valign: 'middle'
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            text_size: self.width, None
+                            line_height: 1.2
 
-                    Label:
-                        id: untung_result
-                        text: 'Untung/Rugi: Rp 0'
-                        color: app.success_text
-                        bold: True
-                        font_size: '15sp'
-                        halign: 'left'
-                        valign: 'middle'
-                        text_size: self.size
+                        Label:
+                            id: total_jual_result
+                            text: 'Total Jual: Rp 0'
+                            color: app.text_color
+                            font_size: '14sp'
+                            halign: 'left'
+                            valign: 'middle'
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            text_size: self.width, None
+                            line_height: 1.2
 
-                    Label:
-                        id: margin_result
-                        text: 'Margin: 0%'
-                        color: app.muted_text
-                        font_size: '14sp'
-                        halign: 'left'
-                        valign: 'middle'
-                        text_size: self.size
+                        Label:
+                            id: untung_result
+                            text: 'Untung/Rugi: Rp 0'
+                            color: app.success_text
+                            bold: True
+                            font_size: '15sp'
+                            halign: 'left'
+                            valign: 'middle'
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            text_size: self.width, None
+                            line_height: 1.2
+
+                        Label:
+                            id: margin_result
+                            text: 'Margin: 0%'
+                            color: app.muted_text
+                            font_size: '14sp'
+                            halign: 'left'
+                            valign: 'middle'
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            text_size: self.width, None
+                            line_height: 1.2
 
                     Button:
                         id: save_btn
@@ -464,6 +495,10 @@
                         disabled: True
                         on_release: app.on_save_transaction()
 
+                    Widget:
+                        size_hint_y: None
+                        height: dp(12)
+
                     Label:
                         id: feedback_label
                         text: 'Masukkan data produk untuk menghitung.'
@@ -471,7 +506,9 @@
                         font_size: '14sp'
                         halign: 'left'
                         valign: 'middle'
-                        text_size: self.size
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text_size: self.width, None
 
 <RiwayatScreen>:
     name: 'riwayat'
