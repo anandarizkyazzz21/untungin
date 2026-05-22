@@ -1,0 +1,868 @@
+#:import dp kivy.metrics.dp
+
+<SidebarButton@Button>:
+    size_hint_y: None
+    height: dp(44)
+    background_normal: ''
+    background_down: ''
+    color: 1, 1, 1, 1
+    bold: True
+    font_size: '14sp'
+    text_size: self.size
+    halign: 'left'
+    valign: 'middle'
+    padding: dp(12), 0
+
+<PanelBox@BoxLayout>:
+    canvas.before:
+        Color:
+            rgba: 0.97, 0.95, 0.91, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [18]
+        Color:
+            rgba: 0.86, 0.83, 0.78, 1
+        Line:
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 18)
+            width: dp(1)
+
+<SmallLabel@Label>:
+    color: 0.12, 0.14, 0.11, 1
+    halign: 'left'
+    valign: 'middle'
+    text_size: self.size
+
+<DashboardScreen>:
+    name: 'dashboard'
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(16)
+        padding: dp(20)
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(170)
+            orientation: 'vertical'
+            padding: dp(20)
+            spacing: dp(10)
+            canvas.before:
+                Color:
+                    rgba: 0.11, 0.34, 0.16, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [20]
+
+            Label:
+                text: 'UNTUNGIN'
+                color: 1, 1, 1, 1
+                font_size: '32sp'
+                bold: True
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+
+            Label:
+                text: 'Aplikasi Perhitungan Untung & Rugi Pedagang'
+                color: 1, 1, 1, 1
+                font_size: '16sp'
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+
+            Widget:
+
+            BoxLayout:
+                size_hint_y: None
+                height: dp(40)
+                spacing: dp(10)
+
+                Button:
+                    text: 'Rp UNTUNGIN'
+                    size_hint_x: None
+                    width: dp(160)
+                    background_normal: ''
+                    background_color: 0.18, 0.49, 0.16, 1
+                    color: 1, 1, 1, 1
+                    bold: True
+
+                Widget:
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(12)
+            size_hint_y: None
+            height: dp(140)
+
+            PanelBox:
+                orientation: 'vertical'
+                padding: dp(16)
+                spacing: dp(10)
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    size_hint_y: None
+                    height: dp(28)
+
+                    Label:
+                        text: '💰'
+                        font_size: '20sp'
+                        color: 0.18, 0.49, 0.16, 1
+                        size_hint_x: None
+                        width: dp(28)
+                        halign: 'center'
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        text: 'Total Omzet'
+                        color: 0.12, 0.14, 0.11, 1
+                        bold: True
+                        halign: 'left'
+                        valign: 'middle'
+                        text_size: self.size
+
+                Label:
+                    id: omzet_value
+                    text: 'Rp 0'
+                    color: 0.18, 0.49, 0.16, 1
+                    font_size: '20sp'
+                    bold: True
+                    halign: 'left'
+                    valign: 'middle'
+                    text_size: self.size
+
+            PanelBox:
+                orientation: 'vertical'
+                padding: dp(16)
+                spacing: dp(10)
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    size_hint_y: None
+                    height: dp(28)
+
+                    Label:
+                        text: '👛'
+                        font_size: '20sp'
+                        color: 0.78, 0.22, 0.18, 1
+                        size_hint_x: None
+                        width: dp(28)
+                        halign: 'center'
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        text: 'Total Pengeluaran'
+                        color: 0.12, 0.14, 0.11, 1
+                        bold: True
+                        halign: 'left'
+                        valign: 'middle'
+                        text_size: self.size
+
+                Label:
+                    id: pengeluaran_value
+                    text: 'Rp 0'
+                    color: 0.78, 0.22, 0.18, 1
+                    font_size: '20sp'
+                    bold: True
+                    halign: 'left'
+                    valign: 'middle'
+                    text_size: self.size
+
+            PanelBox:
+                orientation: 'vertical'
+                padding: dp(16)
+                spacing: dp(10)
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    size_hint_y: None
+                    height: dp(28)
+
+                    Label:
+                        text: '📈'
+                        font_size: '20sp'
+                        color: 0.15, 0.55, 0.24, 1
+                        size_hint_x: None
+                        width: dp(28)
+                        halign: 'center'
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        text: 'Net Profit'
+                        color: 0.12, 0.14, 0.11, 1
+                        bold: True
+                        halign: 'left'
+                        valign: 'middle'
+                        text_size: self.size
+
+                Label:
+                    id: net_value
+                    text: 'Rp 0'
+                    color: 0.15, 0.55, 0.24, 1
+                    font_size: '20sp'
+                    bold: True
+                    halign: 'left'
+                    valign: 'middle'
+                    text_size: self.size
+
+            PanelBox:
+                orientation: 'vertical'
+                padding: dp(16)
+                spacing: dp(10)
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    size_hint_y: None
+                    height: dp(28)
+
+                    Label:
+                        text: '⚡'
+                        font_size: '20sp'
+                        color: 0.11, 0.34, 0.16, 1
+                        size_hint_x: None
+                        width: dp(28)
+                        halign: 'center'
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        text: 'Quick Calculate'
+                        color: 0.12, 0.14, 0.11, 1
+                        bold: True
+                        halign: 'left'
+                        valign: 'middle'
+                        text_size: self.size
+
+                Label:
+                    id: quick_value
+                    text: '0 transaksi'
+                    color: 0.12, 0.14, 0.11, 1
+                    font_size: '20sp'
+                    bold: True
+                    halign: 'left'
+                    valign: 'middle'
+                    text_size: self.size
+
+                Label:
+                    id: quick_state_label
+                    text: 'Tekan Untung / Rugi untuk ringkasan cepat'
+                    color: 0.32, 0.38, 0.28, 1
+                    font_size: '14sp'
+                    halign: 'left'
+                    valign: 'middle'
+                    text_size: self.size
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(16)
+
+            PanelBox:
+                orientation: 'vertical'
+                padding: dp(18)
+                spacing: dp(14)
+                size_hint_x: 0.68
+
+                Label:
+                    text: 'Tabel Ringkasan Transaksi'
+                    bold: True
+                    color: 0.12, 0.14, 0.11, 1
+                    font_size: '18sp'
+                    halign: 'left'
+                    valign: 'middle'
+                    text_size: self.size
+
+                BoxLayout:
+                    size_hint_y: None
+                    height: dp(36)
+                    spacing: dp(8)
+
+                    Label:
+                        text: 'Produk'
+                        color: 0.12, 0.14, 0.11, 1
+                        bold: True
+                        halign: 'center'
+                        valign: 'middle'
+                        text_size: self.size
+                        size_hint_x: 0.22
+
+                    Label:
+                        text: 'Modal'
+                        color: 0.12, 0.14, 0.11, 1
+                        bold: True
+                        halign: 'center'
+                        valign: 'middle'
+                        text_size: self.size
+                        size_hint_x: 0.19
+
+                    Label:
+                        text: 'Jual'
+                        color: 0.12, 0.14, 0.11, 1
+                        bold: True
+                        halign: 'center'
+                        valign: 'middle'
+                        text_size: self.size
+                        size_hint_x: 0.2
+
+                    Label:
+                        text: 'Qty'
+                        color: 0.12, 0.14, 0.11, 1
+                        bold: True
+                        halign: 'center'
+                        valign: 'middle'
+                        text_size: self.size
+                        size_hint_x: 0.14
+
+                    Label:
+                        text: 'Untung/Rugi'
+                        color: 0.12, 0.14, 0.11, 1
+                        bold: True
+                        halign: 'center'
+                        valign: 'middle'
+                        text_size: self.size
+                        size_hint_x: 0.24
+
+                ScrollView:
+                    do_scroll_x: False
+
+                    GridLayout:
+                        id: dashboard_table
+                        cols: 1
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: dp(4)
+
+                BoxLayout:
+                    size_hint_y: None
+                    height: dp(88)
+                    spacing: dp(12)
+
+                    Button:
+                        text: 'View Details'
+                        size_hint_x: 0.55
+                        background_normal: ''
+                        background_color: 0.18, 0.49, 0.16, 1
+                        color: 1, 1, 1, 1
+                        bold: True
+                        on_release: app.switch_screen('riwayat')
+
+                    PanelBox:
+                        orientation: 'vertical'
+                        padding: dp(12)
+                        size_hint_x: 0.45
+                        spacing: dp(10)
+
+                        Label:
+                            text: 'Quick Calculate'
+                            bold: True
+                            color: 0.12, 0.14, 0.11, 1
+                            font_size: '14sp'
+                            halign: 'left'
+                            valign: 'middle'
+                            text_size: self.size
+
+                        BoxLayout:
+                            spacing: dp(10)
+                            size_hint_y: None
+                            height: dp(36)
+
+                            Button:
+                                text: 'Untung'
+                                background_normal: ''
+                                background_color: 0.18, 0.49, 0.16, 1
+                                color: 1, 1, 1, 1
+                                bold: True
+                                on_release: app.set_quick_status('UNTUNG')
+
+                            Button:
+                                text: 'Rugi'
+                                background_normal: ''
+                                background_color: 0.78, 0.22, 0.18, 1
+                                color: 1, 1, 1, 1
+                                bold: True
+                                on_release: app.set_quick_status('RUGI')
+
+                        Label:
+                            id: quick_state_label
+                            text: 'Pilih status untuk ringkasan'
+                            color: 0.32, 0.38, 0.28, 1
+                            font_size: '13sp'
+                            halign: 'left'
+                            valign: 'middle'
+                            text_size: self.size
+
+            PanelBox:
+                orientation: 'vertical'
+                padding: dp(18)
+                spacing: dp(14)
+                size_hint_x: 0.32
+
+                Label:
+                    text: 'Recent Activity'
+                    bold: True
+                    color: 0.12, 0.14, 0.11, 1
+                    font_size: '18sp'
+                    halign: 'left'
+                    valign: 'middle'
+                    text_size: self.size
+
+                ScrollView:
+                    do_scroll_x: False
+
+                    GridLayout:
+                        id: activity_container
+                        cols: 1
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: dp(10)
+
+<HitungBaruScreen>:
+    name: 'hitung_baru'
+    BoxLayout:
+        orientation: 'horizontal'
+        padding: dp(20)
+        spacing: dp(20)
+
+        PanelBox:
+            orientation: 'vertical'
+            padding: dp(18)
+            spacing: dp(14)
+            size_hint_x: 0.55
+
+            Label:
+                text: 'Hitung Baru'
+                bold: True
+                color: 0.12, 0.14, 0.11, 1
+                font_size: '20sp'
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+
+            Label:
+                text: 'Nama Produk'
+                color: 0.12, 0.14, 0.11, 1
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+            TextInput:
+                id: product_input
+                multiline: False
+                size_hint_y: None
+                height: dp(42)
+                background_normal: ''
+                background_color: 1, 1, 1, 1
+                foreground_color: 0.12, 0.14, 0.11, 1
+                padding: dp(12), dp(10)
+
+            Label:
+                text: 'Kategori'
+                color: 0.12, 0.14, 0.11, 1
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+            TextInput:
+                id: category_input
+                multiline: False
+                size_hint_y: None
+                height: dp(42)
+                background_normal: ''
+                background_color: 1, 1, 1, 1
+                foreground_color: 0.12, 0.14, 0.11, 1
+                padding: dp(12), dp(10)
+
+            Label:
+                text: 'Harga Modal'
+                color: 0.12, 0.14, 0.11, 1
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+            TextInput:
+                id: modal_input
+                multiline: False
+                input_filter: 'float'
+                size_hint_y: None
+                height: dp(42)
+                background_normal: ''
+                background_color: 1, 1, 1, 1
+                foreground_color: 0.12, 0.14, 0.11, 1
+                padding: dp(12), dp(10)
+
+            Label:
+                text: 'Harga Jual'
+                color: 0.12, 0.14, 0.11, 1
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+            TextInput:
+                id: price_input
+                multiline: False
+                input_filter: 'float'
+                size_hint_y: None
+                height: dp(42)
+                background_normal: ''
+                background_color: 1, 1, 1, 1
+                foreground_color: 0.12, 0.14, 0.11, 1
+                padding: dp(12), dp(10)
+
+            Label:
+                text: 'Jumlah Unit'
+                color: 0.12, 0.14, 0.11, 1
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+            TextInput:
+                id: qty_input
+                multiline: False
+                input_filter: 'int'
+                size_hint_y: None
+                height: dp(42)
+                background_normal: ''
+                background_color: 1, 1, 1, 1
+                foreground_color: 0.12, 0.14, 0.11, 1
+                padding: dp(12), dp(10)
+
+            Button:
+                text: 'HITUNG SEKARANG'
+                size_hint_y: None
+                height: dp(42)
+                background_normal: ''
+                background_color: 0.18, 0.49, 0.16, 1
+                color: 1, 1, 1, 1
+                bold: True
+                on_release: app.on_calculate()
+
+        PanelBox:
+            orientation: 'vertical'
+            padding: dp(18)
+            spacing: dp(12)
+            size_hint_x: 0.45
+
+            Label:
+                text: 'Hasil Perhitungan'
+                bold: True
+                color: 0.12, 0.14, 0.11, 1
+                font_size: '20sp'
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+
+            Label:
+                id: status_result
+                text: 'Status: -'
+                color: 0.12, 0.14, 0.11, 1
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+
+            Label:
+                id: total_modal_result
+                text: 'Total Modal: Rp 0'
+                color: 0.12, 0.14, 0.11, 1
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+
+            Label:
+                id: total_jual_result
+                text: 'Total Jual: Rp 0'
+                color: 0.12, 0.14, 0.11, 1
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+
+            Label:
+                id: untung_result
+                text: 'Untung/Rugi: Rp 0'
+                color: 0.12, 0.14, 0.11, 1
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+
+            Label:
+                id: margin_result
+                text: 'Margin: 0%'
+                color: 0.12, 0.14, 0.11, 1
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+
+            Button:
+                id: save_btn
+                text: 'Simpan Transaksi'
+                size_hint_y: None
+                height: dp(42)
+                disabled: True
+                background_normal: ''
+                background_color: 0.18, 0.49, 0.16, 1
+                color: 1, 1, 1, 1
+                bold: True
+                on_release: app.on_save_transaction()
+
+            Label:
+                id: feedback_label
+                text: 'Masukkan data produk untuk menghitung.'
+                color: 0.4, 0.4, 0.4, 1
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+
+<RiwayatScreen>:
+    name: 'riwayat'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(14)
+
+        Label:
+            text: 'Riwayat Transaksi'
+            bold: True
+            color: 0.12, 0.14, 0.11, 1
+            font_size: '20sp'
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.size
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(44)
+            spacing: dp(12)
+
+            Button:
+                text: 'Ekspor CSV'
+                background_normal: ''
+                background_color: 0.18, 0.49, 0.16, 1
+                color: 1, 1, 1, 1
+                bold: True
+                on_release: app.on_export_csv()
+
+            Button:
+                text: 'Hapus Semua'
+                background_normal: ''
+                background_color: 0.78, 0.22, 0.18, 1
+                color: 1, 1, 1, 1
+                bold: True
+                on_release: app.on_clear_transactions()
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(36)
+            spacing: dp(8)
+
+            Label:
+                text: 'Produk'
+                color: 0.12, 0.14, 0.11, 1
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint_x: 0.22
+
+            Label:
+                text: 'Modal'
+                color: 0.12, 0.14, 0.11, 1
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint_x: 0.19
+
+            Label:
+                text: 'Jual'
+                color: 0.12, 0.14, 0.11, 1
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint_x: 0.2
+
+            Label:
+                text: 'Qty'
+                color: 0.12, 0.14, 0.11, 1
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint_x: 0.14
+
+            Label:
+                text: 'Untung/Rugi'
+                color: 0.12, 0.14, 0.11, 1
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint_x: 0.175
+
+            Label:
+                text: 'Status'
+                color: 0.12, 0.14, 0.11, 1
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint_x: 0.11
+
+        ScrollView:
+            do_scroll_x: False
+
+            GridLayout:
+                id: history_grid
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: dp(4)
+
+<LaporanScreen>:
+    name: 'laporan'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(14)
+
+        Label:
+            text: 'Laporan Harian'
+            bold: True
+            color: 0.12, 0.14, 0.11, 1
+            font_size: '20sp'
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.size
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(36)
+            spacing: dp(8)
+
+            Label:
+                text: 'Tanggal'
+                color: 0.12, 0.14, 0.11, 1
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint_x: 0.28
+
+            Label:
+                text: 'Total Transaksi'
+                color: 0.12, 0.14, 0.11, 1
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint_x: 0.18
+
+            Label:
+                text: 'Total Untung'
+                color: 0.12, 0.14, 0.11, 1
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint_x: 0.18
+
+            Label:
+                text: 'Total Rugi'
+                color: 0.12, 0.14, 0.11, 1
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint_x: 0.18
+
+            Label:
+                text: 'Net Profit'
+                color: 0.12, 0.14, 0.11, 1
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint_x: 0.18
+
+        ScrollView:
+            do_scroll_x: False
+
+            GridLayout:
+                id: report_grid
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: dp(4)
+
+BoxLayout:
+    orientation: 'horizontal'
+    canvas.before:
+        Color:
+            rgba: 0.85, 0.90, 0.82, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        id: sidebar
+        orientation: 'vertical'
+        size_hint_x: None
+        width: dp(220)
+        padding: dp(20), dp(24), dp(20), dp(20)
+        spacing: dp(12)
+        canvas.before:
+            Color:
+                rgba: 0.85, 0.90, 0.82, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'UNTUNGIN'
+            size_hint_y: None
+            height: dp(48)
+            bold: True
+            color: 0.11, 0.34, 0.16, 1
+            font_size: '22sp'
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.size
+
+        BoxLayout:
+            id: nav_box
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: dp(10)
+
+            SidebarButton:
+                id: dashboard_btn
+                text: '🏠 Dashboard'
+                background_color: 0.18, 0.49, 0.16, 1
+                on_release: app.switch_screen('dashboard')
+
+            SidebarButton:
+                id: hitung_btn
+                text: '🧾 Hitung Baru'
+                on_release: app.switch_screen('hitung_baru')
+
+            SidebarButton:
+                id: riwayat_btn
+                text: '📜 Riwayat'
+                on_release: app.switch_screen('riwayat')
+
+            SidebarButton:
+                id: laporan_btn
+                text: '📊 Laporan'
+                on_release: app.switch_screen('laporan')
+
+        Widget:
+
+    ScreenManager:
+        id: screen_manager
+
+        DashboardScreen:
+        HitungBaruScreen:
+        RiwayatScreen:
+        LaporanScreen:
